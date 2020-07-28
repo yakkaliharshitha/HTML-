@@ -1,0 +1,121 @@
+
+SQL> create table stocklt
+  2   (
+  3     stknum int ,
+  4     stkname varchar(20),
+  5    stkmaterials int,
+  6    stockid int primary key,
+  7    stockadd varchar(20)
+  8      );
+
+Table created.
+
+SQL> insert into stocklt values('1','wax','30','345','delhi');
+
+1 row created.
+
+SQL> insert into stocklt values('2','bread','60','678','bangalore');
+
+1 row created.
+
+SQL> insert into stocklt values('3','boxes','67','898','hyderabad');
+
+1 row created.
+
+
+SQL> create table saleslt
+  2   (
+  3     salnum int primary key,
+  4     salname varchar(20),
+  5     salmaterials int,
+  6     salesid int references stockh(stockid),
+  7     salesadd varchar(20)
+  8      );
+
+Table created.
+
+
+SQL> insert into saleslt values('1','Bottle','23','543','chennai');
+
+1 row created.
+
+SQL> insert into saleslt values('2','rods','45',432','bangalore');
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+SQL> insert into saleslt values('2','rods','45','432','bangalore');
+
+1 row created.
+
+
+SQL> insert into saleslt values('5','rings','45','222','bangalore');
+insert into saleslt values('5','rings','45','222','bangalore')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (DXCFS.SYS_C006994) violated - parent key not
+found
+
+
+
+SQL>  insert into saleslt values('3','boxes','67','898','hyderabad');
+
+1 row created.
+
+SQL> insert into saleslt values('2','rods','45','432','bangalore');
+insert into saleslt values('2','rods','45','432','bangalore')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (DXCFS.SYS_C006993) violated
+
+
+SQL> select * from stocklt;
+
+    STKNUM STKNAME              STKMATERIALS    STOCKID STOCKADD
+---------- -------------------- ------------ ---------- --------------------
+         1 wax                            30        345 delhi
+         2 bread                          60        678 bangalore
+         3 boxes                          67        898 hyderabad
+         1 Bottle                         23        543 chennai
+
+SQL> select * from saleslt;
+
+    SALNUM SALNAME              SALMATERIALS    SALESID SALESADD
+---------- -------------------- ------------ ---------- --------------------
+         1 Bottle                         23        543 chennai
+         2 rods                           45        432 bangalore
+         3 boxes                          67        898 hyderabad
+
+
+
+
+
+> SELECT TO_CHAR (CURRENT_DATE, 'DD-MON-YYYY HH:MI:SS') FROM dual;
+
+TO_CHAR(CURRENT_DATE,'DD-MON-
+-----------------------------
+28-JUL-2020 02:55:42
+
+SQL> SELECT TO_CHAR (CURRENT_DATE, 'DD-MON-YYYY') FROM dual;
+
+TO_CHAR(CURRENT_DATE
+--------------------
+28-JUL-2020
+
+SQL> SELECT TO_CHAR (CURRENT_DATE, 'DD/MON/YYYY') FROM dual;
+
+TO_CHAR(CURRENT_DATE
+--------------------
+28/JUL/2020
+
+SQL> SELECT TO_CHAR (date '2020-07-28', 'DAY') day FROM dual;
+
+DAY
+---------
+TUESDAY
+
+SQL> SELECT TO_CHAR (SYSDATE+10,'DD-MM-YYYY') FROM DUAL;
+
+TO_CHAR(SY
+----------
+07-08-2020
