@@ -1,0 +1,63 @@
+
+
+SQL> create table timetablelt
+  2  (
+  3  day varchar(20),
+  4  session_data varchar(20),
+  5  room_no varchar(20),
+  6  faculty_name varchar(20),
+  7  sem varchar(20),
+  8  subject varchar(20),
+  9  constraint pk_tt primary key(day, session_data, room_no),
+ 10  constraint uq_tt unique (day, session_data, faculty_name),
+ 11  constraint uq_tt1 unique (day, session_data, sem)
+ 12   )
+ 13  ;
+
+Table created.
+
+SQL> insert into timetablelt values('mon','1','r1','raj','1','java');
+
+1 row created.
+
+SQL> insert into timetablelt values('mon','1','r2','ram','1','jee');
+insert into timetablelt values('mon','1','r2','ram','1','jee')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (DXCFS.UQ_TT1) violated
+
+
+SQL> insert into timetablelt values('mon','1','r1','ram','3','jee');
+insert into timetablelt values('mon','1','r1','ram','3','jee')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (DXCFS.PK_TT) violated
+
+
+SQL> insert into timetablelt values('mon','1','r2','raj','3','jee');
+insert into timetablelt values('mon','1','r2','raj','3','jee')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (DXCFS.UQ_TT) violated
+
+
+SQL> insert into timetablelt values('mon','1','r2','ram','3','JAVA');
+
+1 row created.
+
+SQL> insert into timetablelt values('mon','1','r1','ram','5','DBMS');
+insert into timetablelt values('mon','1','r1','ram','5','DBMS')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (DXCFS.PK_TT) violated
+
+
+SQL> insert into timetablelt values('mon','2','r1','john','5','DBMS');
+
+1 row created.
+
+SQL> insert into timetablelt values('tue','1','r1','john','5','DBMS');
+
+1 row created.
+
+SQL>
