@@ -1,0 +1,90 @@
+
+SQL> create table Employee(
+  2  empFname varchar(20),
+  3  empMname varchar(20),
+  4  empLname varchar(30),
+  5  empage int check (empage  between 1 and 50),
+  6  empcity varchar(20) check(empcity LIKE 'B%'),
+  7  empdesignation varchar(20),
+  8  empid varchar(20) primary key,
+  9  empdob date
+ 10  );
+
+Table created.
+
+SQL>  insert into Employee values('yakkali','','harshitha',20,'Banglore','sales manager','empo1',to_date('15-09-1999','dd-mm-yyyy'));
+
+1 row created.
+
+SQL>  insert into Employee values('yakkali','sai','abhishek',18,'Banglore','sales manager','empo2',to_date('01-01-2020','dd-mm-yyyy'));
+
+1 row created.
+
+SQL>  insert into Employee values('godi','sai','mahesh',18,'Bojpur','ex manager','empo3',to_date('10-08-2020','dd-mm-yyyy'));
+
+1 row created.
+
+SQL>  insert into Employee values('godi','sai','ramesh',20,'Bojpur','manager','empo4',to_date('17-09-1998','dd-mm-yyyy'));
+
+1 row created.
+
+SQL>  insert into Employee values('Raji','sai','maheshwari',20,'Budhwar','sevice manager','empo5',to_date('07-07-1998','dd-mm-yyyy'));
+
+1 row created.
+
+SQL>
+
+ update Employee set empcity = 'Bodhpur'
+  2  where empid='empo4';
+
+1 row updated.
+
+SQL> delete from Employee
+  2  where empid='empo3';
+
+1 row deleted.
+
+SQL> delete from Employee;
+
+4 rows deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+
+
+SQL> select empFname,empLname,empLname,empdob from employee;
+
+EMPFNAME             EMPLNAME
+-------------------- ------------------------------
+EMPLNAME                       EMPDOB
+------------------------------ ---------
+yakkali              harshitha
+harshitha                      15-SEP-99
+
+yakkali              abhishek
+abhishek                       01-JAN-20
+
+godi                 mahesh
+mahesh                         10-AUG-20
+
+
+EMPFNAME             EMPLNAME
+-------------------- ------------------------------
+EMPLNAME                       EMPDOB
+------------------------------ ---------
+godi                 ramesh
+ramesh                         17-SEP-98
+
+Raji                 maheshwari
+maheshwari                     07-JUL-98
+
+
+SQL> select SUBSTR(empFname,1,1),SUBSTR(empMname,1,1),empLname as Name from Employee where empid='empo1';
+
+SUBS SUBS NAME
+---- ---- ------------------------------
+y         harshitha
+
+SQL>
