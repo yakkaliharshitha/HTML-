@@ -1,0 +1,189 @@
+
+SQL> select count(sname) , sem
+  2  from stud
+  3  group by sem;
+
+COUNT(SNAME)        SEM
+------------ ----------
+           3          1
+           3          5
+           2          3
+
+SQL> select clg_id
+  2  from stud
+  3  group by clg_id;
+
+    CLG_ID
+----------
+       121
+       122
+
+SQL> select clg_id ,count(sem)
+  2  from stud
+  3  group by clg_id;
+
+    CLG_ID COUNT(SEM)
+---------- ----------
+       121          4
+       122          4
+
+SQL> select  clg_id ,sem
+  2  from stud;
+
+    CLG_ID        SEM
+---------- ----------
+       121          1
+       121          3
+       121          1
+       121          5
+       122          5
+       122          3
+       122          1
+       122          5
+
+8 rows selected.
+
+SQL> select clg_id ,count(distinct sem)
+  2  from stud
+  3  group by clg_id;
+
+    CLG_ID COUNT(DISTINCTSEM)
+---------- ------------------
+       121                  3
+       122                  3
+
+SQL> select clg_id
+  2  from stud
+  3  group by clg_id
+  4  having count(distinct sem)=3;
+
+    CLG_ID
+----------
+       121
+       122
+
+SQL> select clg_id from stud
+  2  where sname='Rohit';
+
+    CLG_ID
+----------
+       121
+
+SQL> select * from stud
+  2  where clg_id=121;
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+
+SQL> select * from stud
+  2  where clg_id = (select clg_id from stud
+  3  where sname='Rohit');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+
+SQL> select * from stud
+  2  where clg_id = (select clg_id from stud
+  3  where sname='Rohit' or sname= 'Dhoni');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+
+SQL>
+SQL> select * from stud
+  2  where clg_id in (select clg_id from stud
+  3  where sname='Rohit' or sname= 'Dhoni');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       104        121 male            5         67 Virat
+       103        121 female          1         67 rajeshwari
+       102        121 male            3         67 Rahul
+       101        121 male            1         67 Rohit
+
+SQL> select * from stud
+  2  where clg_id =any (select clg_id from stud
+  3  where sname='Rohit' or sname= 'Dhoni');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       104        121 male            5         67 Virat
+       103        121 female          1         67 rajeshwari
+       102        121 male            3         67 Rahul
+       101        121 male            1         67 Rohit
+
+SQL> select * from stud where clg_id =121 or clg_id=123;
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+
+SQL> select * from stud
+  2  where clg_id =all (select clg_id from stud
+  3  where sname='Rohit' or sname= 'Dhoni');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+
+SQL> select * from stud where clg_id =121 and clg_id=123 ;
+
+no rows selected
+
+SQL> select * from stud;
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       101        121 male            1         67 Rohit
+       102        121 male            3         67 Rahul
+       103        121 female          1         67 rajeshwari
+       104        121 male            5         67 Virat
+       105        122 male            5         67 Dawan
+       106        122 female          3         67 smrithi
+       107        122 female          1         67 harampreet
+       108        122 male            5         67 DK
+
+8 rows selected.
+
+SQL> select * from stud
+  2  where sem > any (select sem from stud where sname='Rohit' or sname='kuldeep');
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       104        121 male            5         67 Virat
+       105        122 male            5         67 Dawan
+       108        122 male            5         67 DK
+       106        122 female          3         67 smrithi
+       102        121 male            3         67 Rahul
+
+SQL> select * from stud
+  2  where sem > all (select sem from stud where sname='Rohit' or sname='kuldeep')
+  3  order by stud_id;
+
+   STUD_ID     CLG_ID GENDER        SEM      MARKS SNAME
+---------- ---------- ------ ---------- ---------- --------------------
+       102        121 male            3         67 Rahul
+       104        121 male            5         67 Virat
+       105        122 male            5         67 Dawan
+       106        122 female          3         67 smrithi
+       108        122 male            5         67 DK
+
+SQL>
