@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Empolyee</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<script type="text/javascript">
+	
+	function check() {
+    if(document.getElementById('pass').value === document.getElementById('cpass').value) {
+        document.getElementById('message').innerHTML = "password match";
+    } else {
+        document.getElementById('message').innerHTML = "Passwords dosen't match please retry";
+    }
+}
+
+
+
+types=["Under Graduation","Graduation",];
+
+
+function filldd()
+{
+var typeDD=document.getElementById('type');
+for(i=0;i<types.length;i++){
+var ele=document.createElement('option');
+ele.text=types[i];
+typeDD.add(ele,i+1)
+}
+}
+
+
+   data=[['CIVIL ENGINEERING','ELECTRICAL ENGINEERING','COMPUTER SCIENCE ENGINEERING','MECHANICAL ENGINEERING','INFORMATION TECHNOLOGY','AERONAUTICAL ENGINEERING','CHEMICAL ENGINEERING','AUTOMATION & ROBOTICS ENGINEERING'],['Master of Business Administration',' Master of Engineering',' Master In Arts ']];
+
+
+function fillData()
+{
+var typeDDN=document.getElementById('type');
+  var selectedIdx= typeDDN.selectedIndex;
+
+console.log(selectedIdx);
+
+var dataDD=document.getElementById('dd');
+
+dataDD.innerText=null;
+
+
+for(i=0;i<data[selectedIdx].length;i++)
+{
+
+var ele=document.createElement('option');
+ele.text=data[selectedIdx][i];
+
+dataDD.add(ele,i+1)
+
+
+}
+
+
+}
+
+
+</script>
+
+<style type="text/css"> 
+input{
+	margin: 20px 0px;
+}
+</style>
+
+
+</head>
+<body onload="filldd()">
+<div style="margin-top: 40px;">
+				<center>
+
+					<img src="img_avatar3.png" alt="John Doe" style="width:60px; border-radius: 50px;">
+				
+				<form>
+					<fieldset style="width: 30%">
+					
+					<legend>Employee Registration</legend>
+					
+					
+				     <div>
+				     <input type="text" name="fullName" placeholder="Name" 
+				     onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)">
+
+				     </div>
+
+				     <div>
+				     <input type="password" id="pass" placeholder="password" required>
+				     </div>
+
+				     <div>
+				     <input type="password" id="cpass" placeholder="Confirm password" required onchange="check()">
+				     </div>
+
+				    <div> <span id='message'></span></div>
+                     
+                     <div style="margin: 20px 0px;">
+                     	<span>Select Education Qualification:</span><br><br>
+				     <select id="type" onchange="fillData()">
+                     </select>
+                     <br><br>
+                     <select id="dd">
+                     <option>select</option>
+                     </select>
+                     </div>
+				     <div>
+				     	<label>Date of Birth</label>
+				     	<input type="date" id="dob" min="1950-07-02" max="2002-07-02" required>
+				     </div>
+				     <button class="btn btn-primary" value="Submit">Submit</button>
+</fieldset>
+			    </form>
+			    
+			    </center>
+			    </div>
+
+
+
+</body>
+</html>
