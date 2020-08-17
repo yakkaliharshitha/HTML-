@@ -1,0 +1,265 @@
+1) 
+import java.util.StringTokenizer;  
+
+public class ASS1 {
+	String GapStr(String data) {
+		
+		 StringTokenizer str = new StringTokenizer(data); 
+		 
+	     while (str.hasMoreTokens()) {  
+	    	 
+	         System.out.println(str.nextToken());  
+	     }
+	     
+		return " ";
+		
+	}
+	
+	
+	 public static void main(String args[]){  
+		 ASS1 a=new ASS1();
+		 a.GapStr("HII I AM HARSHU");
+		  
+	 }
+	
+	
+
+}
+
+
+
+
+
+
+2)
+
+import java.util.*;
+public class ASS2{
+	
+          String GapStr(String data) {
+    	/*  String[]c=data.split(" ");
+    	  for(int j=0;j<c.length;j++) {
+    		  String b=c[j];
+    		  StringBuilder str=new StringBuilder(b);
+    		  str.reverse();
+    		  */
+        	  char[] arr=data.toCharArray();
+				
+  			String reverse=" ";
+  			
+  			for(int i=data.length()-1;i>=0;i--){
+  			reverse+=arr[i];
+  			}
+  			//System.out.println(reverse);
+  		
+  	    char[] arr1=reverse.toCharArray();
+        	  String d=reverse.toString();
+    		 // System.out.println(d);
+    		  String[]arr2 = reverse.split(" ");
+    		
+    		  for(int j=arr2.length-1;j>0;j--){
+    			  System.out.println(arr2[j]);
+    			  
+    		  }
+    	  
+		return " ";
+			
+		}
+		
+		
+		 public static void main(String args[]){  
+			 ASS2 a=new ASS2();
+			 a.GapStr("HII I AM HARSHU");
+			  
+		 }
+		
+		
+
+	}
+
+
+
+
+
+3)
+public  class Car  {
+ 
+  int ManfYear;
+  private String name;
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public int getManfYear() {
+return ManfYear;
+}
+public void setManfYear(int manfYear) {
+ManfYear = manfYear;
+}
+public Car(String name, int manfYear) {
+super();
+this.name = name;
+ManfYear = manfYear;
+}
+@Override
+public String toString() {
+return "Car [name=" + name + ", ManfYear=" + ManfYear + "]";
+}
+public Car() {
+
+}
+ 
+}
+
+
+
+import java.util.List;
+
+public class Show {
+ private String Showroomname;
+ private int address;
+ List<Car> cars;
+public String getShowroomname() {
+return Showroomname;
+}
+public void setShowroomname(String showroomname) {
+Showroomname = showroomname;
+}
+public int getAddress() {
+return address;
+}
+public void setAddress(int address) {
+this.address = address;
+}
+public List<Car> getCars() {
+return cars;
+}
+public void setCars(List<Car> cars) {
+this.cars = cars;
+}
+public Show(String showroomname, List<Car> cars, int address) {
+super();
+Showroomname = showroomname;
+this.address = address;
+this.cars = cars;
+}
+
+@Override
+public String toString() {
+return "Showroom [Showroomname=" + Showroomname + ", address=" + address + ", cars=" + cars + "]";
+}
+ 
+ 
+}
+
+
+
+
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+public class Main {
+Map<String,List<Car>> carstore;
+public void displayCarsByShowroomname(String Showroomname)
+{
+List<Car> cars=carstore.get(Showroomname);
+for(Car car:cars){
+System.out.println(car);
+}
+
+}
+public static void main(String[] args) {
+	Car c1=new Car("Toyota camry",2012);
+	Car c2=new Car("Nissan",2012);
+	Car c3=new Car("Maruthi",2015);
+	Car c4=new Car("Hyundai",2015);
+	List<Car> cars=new ArrayList<Car>();
+	
+    cars.add(c1);
+    cars.add(c2);
+    cars.add(c3);
+    cars.add(c4);
+   Show showroom=new Show("Service",cars, 90);
+  
+   Car c5=new Car("Hyundai",2013);
+Car c6=new Car("Tata",2016);
+Car c7=new Car("Polo",2017);
+List<Car> cars1=new ArrayList<Car>();
+cars1.add(c5);
+cars1.add(c6);
+cars1.add(c7);
+//Show showroom1=new Show("Service 2", cars1);
+ 
+  Main m= new Main();
+
+  m.carstore=new HashMap<String,List<Car>>();
+  m.carstore.put(showroom.getShowroomname(), showroom.getCars());
+ // m.carstore.put(showroom1.getShowroomname(),showroom1.getCars());
+
+
+  m.displayCarsByShowroomname("Service");
+
+
+}
+}
+
+
+
+
+
+
+4)
+class MarksNotFoundException extends Exception{
+	
+	public MarksNotFoundException() {
+		super(" Sorry invalid marks entered ");
+		}
+		}
+
+class Marks
+{
+	static int max=100;
+  void MarksCheck(int m)throws MarksNotFoundException
+{
+if(m >=0 && m<=max)
+	System.out.println("Valid marks"+m);
+
+
+else
+
+	throw new MarksNotFoundException();
+
+}
+
+
+
+
+}
+public class ASS4 {
+
+	public static void main(String[] args) {
+		Marks a= new Marks();
+		try{
+			
+			a.MarksCheck(10);
+			a.MarksCheck(60);
+			a.MarksCheck(70);
+			a.MarksCheck(80);
+			a.MarksCheck(120);
+			
+			}
+			catch (Exception e) {
+		
+			System.out.println(e);
+			}
+
+
+	}
+
+}
