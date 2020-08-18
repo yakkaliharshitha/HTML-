@@ -114,7 +114,6 @@ public Car() {
 }
 
 
-
 import java.util.List;
 
 public class Show {
@@ -159,6 +158,8 @@ return "Showroom [Showroomname=" + Showroomname + ", address=" + address + ", ca
 
 
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -194,20 +195,22 @@ List<Car> cars1=new ArrayList<Car>();
 cars1.add(c5);
 cars1.add(c6);
 cars1.add(c7);
-//Show showroom1=new Show("Service 2", cars1);
+Show showroom1=new Show("Service 2", cars1, 100);
  
   Main m= new Main();
 
   m.carstore=new HashMap<String,List<Car>>();
   m.carstore.put(showroom.getShowroomname(), showroom.getCars());
- // m.carstore.put(showroom1.getShowroomname(),showroom1.getCars());
+  m.carstore.put(showroom1.getShowroomname(),showroom1.getCars());
 
 
-  m.displayCarsByShowroomname("Service");
+  m.displayCarsByShowroomname("Service 2");
 
 
 }
 }
+
+
 
 
 
