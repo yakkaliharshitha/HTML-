@@ -1,0 +1,80 @@
+ 
+class Tortoise extends Thread implements Runnable{
+	@Override
+	public void run() {
+	for(int i=0;i<=100;i++)
+	{
+	System.out.println( i+ " Running "+Thread.currentThread().getName());
+
+	try {
+	Thread.sleep(200);
+	} catch (InterruptedException e) { 
+	e.printStackTrace();
+	}
+	}}}	
+
+
+class Hare extends Thread implements Runnable {
+	@Override
+	public void run() {
+	for(int i=0;i<=100;i++)
+	{
+	System.out.println(i+ " Running "+Thread.currentThread().getName());
+
+	try {
+	Thread.sleep(100);
+	} catch (InterruptedException e) {
+	e.printStackTrace();
+	}
+	if(i==90) {
+		try {
+			Thread.sleep(5000);
+			} catch (InterruptedException e) {
+			e.printStackTrace();
+			}
+		
+	}
+	}}
+}
+	
+	
+
+public class Race {
+	
+	public static void main(String[] args) {
+
+		Tortoise t=new Tortoise();
+		Hare h =new Hare();
+
+		Thread tortoiseThread=new Thread(t,"tortoise");
+		Thread hareThread=new Thread(h,"Hare");
+
+		tortoiseThread.start();
+		hareThread.start();
+
+		while(true)
+		{
+		if(!hareThread.isAlive())
+		{
+		System.out.println("Hare Wins The Race");
+		tortoiseThread.stop();
+		break;
+		}
+
+		if(!tortoiseThread.isAlive())
+		{
+		System.out.println("Tortoise Wins The Race");
+		hareThread.stop();
+		break;
+		}
+
+
+
+		}
+
+
+		
+
+		}
+
+		}
