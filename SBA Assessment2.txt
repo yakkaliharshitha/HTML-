@@ -154,6 +154,65 @@ return "Showroom [Showroomname=" + Showroomname + ", address=" + address + ", ca
 }
 
 
+Map<String, List<Car>> carstore;
+
+	public void displayByShowroomNameSort(String name) {
+		List<Car> cars = carstore.get(name);
+		
+		System.out.println(" sort on  type manufacture year :");
+		Collections.sort(cars, new ManufSort());		
+		for(Car car:cars)
+		{
+			car.Show();
+			
+		}
+		System.out.println();
+		
+		
+		System.out.println(" sort on type car name :");
+		Collections.sort(car, new CarSort());		
+		for(Car car:cars)
+		{
+			car.Show();
+			
+		}
+		System.out.println();
+	}
+
+
+
+
+
+
+import java.util.Comparator;
+
+
+
+public class ManufSort implements Comparator<Car> {
+
+	@Override
+	public int compare(Car o1, Car o2) {		
+		return o1.getManfuYear() - o2.getManfuYear();
+	}
+
+}
+
+
+
+
+
+import java.util.Comparator;
+
+
+public class CarSort implements Comparator<Car> {
+
+	@Override
+	public int compare(Car n1, Car n2) {		
+		return n1. getCarName().compareTo(n2. getCarName());
+	}
+
+}
+
 
 
 
