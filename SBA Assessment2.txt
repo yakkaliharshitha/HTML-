@@ -153,6 +153,7 @@ return "Showroom [Showroomname=" + Showroomname + ", address=" + address + ", ca
  
 }
 
+import java.util.*;
 
 Map<String, List<Car>> carstore;
 
@@ -163,7 +164,7 @@ Map<String, List<Car>> carstore;
 		Collections.sort(cars, new ManufSort());		
 		for(Car car:cars)
 		{
-			car.Show();
+			car.ShowCarDetails();
 			
 		}
 		System.out.println();
@@ -173,7 +174,7 @@ Map<String, List<Car>> carstore;
 		Collections.sort(car, new CarSort());		
 		for(Car car:cars)
 		{
-			car.Show();
+			car.ShowCarDetails();
 			
 		}
 		System.out.println();
@@ -191,8 +192,8 @@ import java.util.Comparator;
 public class ManufSort implements Comparator<Car> {
 
 	@Override
-	public int compare(Car o1, Car o2) {		
-		return o1.getManfuYear() - o2.getManfuYear();
+	public int compare(Car l1, Car l2) {		
+		return l1.getManfYear() - l2.getManfYear();
 	}
 
 }
@@ -207,8 +208,8 @@ import java.util.Comparator;
 public class CarSort implements Comparator<Car> {
 
 	@Override
-	public int compare(Car n1, Car n2) {		
-		return n1. getCarName().compareTo(n2. getCarName());
+	public int compare(Car m1, Car m2) {		
+		return m1. getName().compareTo(m2. getName());
 	}
 
 }
