@@ -211,6 +211,50 @@ cars1.add(c7);
 
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class ManufSort {
+	public static void main(String[]args) {
+		List<Integer> Car=new ArrayList<Integer>();
+		Car.add(2020);
+		Car.add(2018);
+		Car.add(2012);
+		Car.add(2014);
+		Car.add(2009);
+		Car.add(2007);
+		Collections.sort(Car);
+		for(int x:Car) {
+			System.out.println(x);
+		}
+	}
+
+}
+
+
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CarSort {
+	public static void main(String[]args) {
+		List<String> Car=new ArrayList<String>();
+		Car.add("Ford");
+		Car.add("Hyundai");
+		Car.add("Tata");
+		Car.add("Benz");
+		Car.add("Maruthi");
+		Collections.sort(Car);
+		for(String x:Car) {
+			System.out.println(x);
+		}
+	}
+}
+
+
+
 
 
 
