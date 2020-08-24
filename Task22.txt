@@ -1,0 +1,246 @@
+package industry.conn;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBConnection {
+	public static Connection getConnect(){
+		try{
+		Class.forName("oracle.jdbc.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "dxcfs","pass");
+		return con;
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		return null;
+		}
+		}
+
+}
+
+
+
+
+
+
+
+package industry.model;
+
+public class Industry {
+	int productId;
+	String productName;
+	int productPrice;
+	int ProductManufYear;
+	int productPortNo;
+	int ProductType;
+	public int getProductId() {
+		return productId;
+	}
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public int getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(int productPrice) {
+		this.productPrice = productPrice;
+	}
+	public int getProductManufYear() {
+		return ProductManufYear;
+	}
+	public void setProductManufYear(int productManufYear) {
+		ProductManufYear = productManufYear;
+	}
+	public int getProductPortNo() {
+		return productPortNo;
+	}
+	public void setProductPortNo(int productPortNo) {
+		this.productPortNo = productPortNo;
+	}
+	public int getProductType() {
+		return ProductType;
+	}
+	public void setProductType(int productType) {
+		ProductType = productType;
+	}
+	public Industry(int productId, String productName, int productPrice, int productManufYear, int productPortNo,
+			int productType) {
+		super();
+		this.productId = productId;
+		this.productName = productName;
+		this.productPrice = productPrice;
+		ProductManufYear = productManufYear;
+		this.productPortNo = productPortNo;
+		ProductType = productType;
+	}
+
+	public Industry() {
+		
+	}
+	@Override
+	public String toString() {
+		return "Industry [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
+				+ ", ProductManufYear=" + ProductManufYear + ", productPortNo=" + productPortNo + ", ProductType="
+				+ ProductType + "]";
+	}
+	
+}
+
+
+
+
+
+package industry.create;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import industry.conn.DBConnection;
+import industry.create.*;
+import industry.model.Industry;
+import myschool.model.College;
+
+
+public class Create {
+	public ArrayList<Industry> getIndustry(){
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="select * from industry";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+		ArrayList<Industry> industryList=new ArrayList<>();
+
+		ResultSet res= stat.executeQuery();
+		if(res.next())
+		{
+
+		do{
+
+		int proid= res.getInt(1);
+		String prona= res.getString(2);
+		int propri= res.getInt(3);
+		int proman=res.getInt(4);
+		int proport=res.getInt(5);
+		int proty=res.getInt(6);
+
+		Industry industry=new Industry(proid, prona, propri,proman,proport,proty);
+
+		industryList.add(industry);
+
+		 }
+		while(res.next());
+
+		}
+
+		return industryList;
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return null;
+	}
+		
+	public int delete(int productid) {
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="delete from industry where productId=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+
+		stat.setInt(1,productid);
+
+		int res= stat.executeUpdate();
+		if(res>0){
+		return res;
+		}
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return 0;
+		}
+
+		
+	
+
+	public String create(Industry industry){
+		try //22 Some CLG 0
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="insert into industry values(?,?,?,?,?,?)";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+		stat.setInt(1, industry.getProductId());
+		stat.setString(2, industry.getProductName());
+		stat.setInt(3, industry.getProductPrice());
+		stat.setInt(4, industry.getProductManufYear());
+		stat.setInt(5, industry.getProductPortNo());
+		stat.setInt(6, industry.getProductType());
+
+		int res= stat.executeUpdate();
+		if(res>0)
+		return "Industry Created";
+		else
+		return "Industry connot be Created";
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		return "Exception "+e;
+		}
+
+
+		}
+
+	
+}
+
+
+
+
+
+
+package industry.service;
+import java.util.ArrayList;
+
+import industry.conn.*;
+import industry.model.*;
+import industry.create.*;
+public class Service {
+	public static void main(String[] args) {
+	Industry industry=new Industry(35,"FINAL PRODUCT",290,2015,90,64);
+		Create c=new Create();
+		//System.out.println(c.create(industry));
+		//System.out.println(c.delete(23));
+		
+
+
+		ArrayList<Industry> industryList= c.getIndustry();
+
+		
+		for(Industry ind:industryList)
+		{
+
+		System.out.println(ind);
+		}
+	}
+
+}
