@@ -1,0 +1,434 @@
+package myschool.model;
+
+import java.util.Date;
+
+public class Player {
+	String playerid;
+	String fname;
+	String lname; 
+    Date dob;
+	int age;
+	int playernumber;
+	public String getPlayerid() {
+		return playerid;
+	}
+	public void setPlayerid(String playerid) {
+		this.playerid = playerid;
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public Date getDob() {
+		return dob;
+	}
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public int getPlayernumber() {
+		return playernumber;
+	}
+	public void setPlayernumber(int playernumber) {
+		this.playernumber = playernumber;
+	}
+	
+	
+public Player(String playerid, String fname, String lname, Date dob, int age, int playernumber) {
+		super();
+		this.playerid = playerid;
+		this.fname = fname;
+		this.lname = lname;
+		this.dob = dob;
+		this.age = age;
+		this.playernumber = playernumber;
+	}
+public Player(){
+	
+}
+@Override
+public String toString() {
+	return "Player [playerid=" + playerid + ", fname=" + fname + ", lname=" + lname + ", dob=" + dob + ", age=" + age
+			+ ", playernumber=" + playernumber + "]";
+}
+
+	
+
+}
+
+
+
+
+
+package myschool.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import myschool.dbutil.DBConnection;
+import myschool.model.College;
+import myschool.model.Player;
+
+public class PlayerDao {
+	
+	public String generatePlayerId(String fname,String lname){
+		String playerId="";
+		String seqNum="";
+		int seqNumber=0;
+		try{
+		Connection con=  DBConnection.getConnect();
+		String sql="select player_sequence.nextval from dual";
+		PreparedStatement stat=con.prepareStatement(sql);
+		ResultSet rs= stat.executeQuery();
+		if(rs.next()){
+		seqNumber=rs.getInt(1);
+		}
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		if(seqNumber < 100 && seqNumber >=10)
+		seqNum="0"+seqNumber;
+		else if(seqNumber<10)
+		seqNum="00"+seqNumber;
+		else
+		seqNum=""+seqNumber;
+
+		playerId=fname.substring(0,2)+lname.substring(0,2)+seqNum;
+
+		return playerId;
+		}
+
+	
+	
+	public String create(Player player) {
+		try 
+		{
+		Connection connection=DBConnection.getConnect();
+		java.util.Date dob=player.getDob();
+
+		java.sql.Date sqlDob=new java.sql.Date(dob.getTime());
+		String sql="insert into player values(?,?,?,?,?,?)";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+		stat.setString(1, generatePlayerId(player.getFname(), player.getLname()));
+		stat.setDate(4, new java.sql.Date(player.getDob().getTime()));
+		stat.setString(2, player.getFname());
+		stat.setString(3, player.getLname());
+		stat.setInt(5, player.getAge());
+		stat.setInt(6, player.getPlayernumber());
+		
+		int res= stat.executeUpdate();
+		if(res>0) 
+		return "player Created";
+		
+		
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		return "Exception "+e;
+		}
+		return "player connot be Created";
+	}
+
+	
+
+	/*public String updatePlayer(String playerid,Player player){
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		Player existPlayer= getPlayerbyid(playerid);
+
+		String sql="update player set fname=? ,lname=?,dob=?,age=?,playernumber=? where playerid=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+		
+        if(player.getFname()!=null)
+		{
+		existPlayer.setFname((player.getFname()));
+		}
+		
+		if(player.getLname()!=null)
+		{
+		existPlayer.setLname((player.getLname()));
+		}
+		
+		if(player.getDob()!=null)
+		{
+		existPlayer.setDob((player.getDob()));
+		}
+		
+		if(player.getAge()!=0)
+		{
+		existPlayer.setAge((player.getAge()));
+		}
+
+		if(player.getPlayernumber()!=0)
+		{
+		existPlayer.setPlayernumber((player.getPlayernumber()));
+		}
+		
+		
+	    stat.setString(1, existPlayer.getPlayerid());
+		stat.setString(2, existPlayer.getFname());
+		stat.setString(3, existPlayer.getLname() );
+        stat.setDate(4,new java.sql.Date(existPlayer.getDob().getTime()));
+		stat.setInt(5, existPlayer.getAge());
+		stat.setInt(6, existPlayer.getPlayernumber() );
+
+
+
+		int res= stat.executeUpdate();
+		if(res>0){
+		return "updated";
+		}
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return "cannot be updated";
+		}
+	*/
+	
+	public String update(String fname,Player player) {
+		try {
+		Connection connection = DBConnection.getConnect();
+		Player existPlayer = getPlayerByName(fname);
+		String sql="update player set playerid=? ,lname=?,dob=?,age=?,playernumber=? where fname=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+		 if(player.getPlayerid()!=null)
+			{
+			existPlayer.setPlayerid((player.getPlayerid()));
+			}
+			
+			if(player.getLname()!=null)
+			{
+			existPlayer.setLname((player.getLname()));
+			}
+			
+			if(player.getDob()!=null)
+			{
+			existPlayer.setDob((player.getDob()));
+			}
+			
+			if(player.getAge()!=0)
+			{
+			existPlayer.setAge((player.getAge()));
+			}
+
+			if(player.getPlayernumber()!=0)
+			{
+			existPlayer.setPlayernumber((player.getPlayernumber()));
+			}
+			
+			
+		    stat.setString(1, existPlayer.getPlayerid());
+			stat.setString(2, existPlayer.getFname());
+			stat.setString(3, existPlayer.getLname() );
+	        stat.setDate(4,new java.sql.Date(existPlayer.getDob().getTime()));
+			stat.setInt(5, existPlayer.getAge());
+			stat.setInt(6, existPlayer.getPlayernumber() );
+
+
+
+			int res= stat.executeUpdate();
+			if(res>0){
+			return "updated";
+			}
+
+			}
+			catch (Exception e) {
+			e.printStackTrace();
+
+			}
+
+			return "cannot be updated";
+			}
+	
+	
+
+
+
+	
+
+
+	public Player getPlayerByName(String fname){
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="select * from player where fname=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+
+		stat.setString(2,fname);
+
+		ResultSet res= stat.executeQuery();
+		if(res.next())
+		{
+
+		String playerid= res.getString(1);
+		String ffname= res.getString(2);
+		String lname= res.getString(3);
+		Date dob=res.getDate(4);
+		int age= res.getInt(5);
+		int playernumber= res.getInt(6);
+		Player player=new Player(playerid,ffname, lname,dob,age,playernumber);
+		return player;
+		}
+
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return null;
+		}
+
+		
+
+
+	public String deletePlayer(String playeridd){
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="delete from player where playerid=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+        stat.setString(1,playeridd);
+
+		int res= stat.executeUpdate();
+		if(res>0){
+		return "deleted";
+		}
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return "cannot be deleted";
+		}
+
+		
+	public ArrayList<Player> getPlayer(){
+		try
+		{
+		Connection connection=DBConnection.getConnect();
+
+		String sql="select * from player";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+		ArrayList<Player> playerList=new ArrayList<>();
+
+		ResultSet res= stat.executeQuery();
+		if(res.next())
+		{
+
+		do{
+        String playerid= res.getString(1);
+		String fname= res.getString(2);
+		String lname= res.getString(3);
+		Date dob=res.getDate(4);
+		int age=res.getInt(5);
+		int playernumber=res.getInt(6);
+
+
+		Player player=new Player(playerid,fname,lname,dob,age,playernumber);
+
+		playerList.add(player);
+
+		 }
+		while(res.next());
+
+		}
+
+		return playerList;
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return null;
+		}
+
+	
+	
+
+
+}
+
+
+
+package myschool.service;
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import myschool.dao.PlayerDao;
+import myschool.model.Player;
+
+public class PlayerService {
+	public static void main(String[] args) {
+		
+		/*SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date dob=null;
+		try {
+		 dob=dateFormat.parse("14-09-2001");
+		} 
+		catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+			*/
+
+
+			
+		Player player=new Player();
+		PlayerDao da=new PlayerDao();
+		player.setAge(20);
+		String res=da.update("virat",player);
+		System.out.println(res);
+		
+
+		/*ArrayList<Player> playerList= dao.getPlayer();
+
+		for(Player ply:playerList)
+		{
+
+		System.out.println(ply);
+		}
+		*/
+		
+	}
+	
+
+}
+
