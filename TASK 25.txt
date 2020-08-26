@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Visit">
+User Name:<input type="text" name="data">
+<input type="submit">
+
+</form>
+
+</body>
+</html>
+
+
+
+package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/Visit")
+public class Visit extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private int Count; 
+
+	   public void init() { 
+	      // Reset hit counter.
+	      Count = 0;
+	   } 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        Count++; 
+        out.println(" Views Till now  are"+Count+" !!!                  ");
+        out.println("     ------------------------------------------  ");
+       out.println("Till now "+Count+"  people visited this site");
+        
+                                      
+    }
+
+
+		
+
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		doGet(request, response);
+	}
+
+}
