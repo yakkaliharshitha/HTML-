@@ -476,3 +476,154 @@ public class Delete extends HttpServlet {
 
 	
 }
+
+
+
+
+
+
+
+public ArrayList<Product> getAllsearch(String name)
+	{
+	try
+	{
+
+	Connection con=DBconnection.getConnect();
+	String sql="select * from products where prod_Name like'%"+name +"%'";
+     PreparedStatement stat=con.prepareStatement(sql);
+	 ResultSet rs= stat.executeQuery();
+     ArrayList<Product> searchList=new ArrayList<>();
+
+	while(rs.next())
+	{
+	int prodId= rs.getInt("prod_id");
+	String prodName= rs.getString("prod_name");
+	float prodPrice= rs.getFloat("prod_price");
+	Date mfd= rs.getDate("mfd");
+	String colour= rs.getString("colour");
+	Date expDate=rs.getDate("exp_date");
+
+	Product product=new Product(prodId, prodName, prodPrice, mfd, colour, expDate);
+
+	searchList.add(product);
+
+	}
+
+	return searchList;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+
+
+package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.myserv.dao.ProductDao;
+import com.myserv.model.Product;
+
+
+@WebServlet("/Search")
+public class Search extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+   
+    public Search() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ProductDao dao=new ProductDao();
+		String prodname=request.getParameter("search");
+		ArrayList<Product> searchList= dao.getAllsearch(prodname);
+		HttpSession session= request.getSession();
+		session.setAttribute("searchList", searchList);
+        RequestDispatcher rd=  request.getRequestDispatcher("SearchDisplay.jsp");
+		rd.forward(request, response);
+		
+	}
+
+}
+
+
+
+
+
+<%@page import="com.myserv.model.Product"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+
+td
+{
+background-color: pink;
+font-family:comic sans ms;
+font-size: 15px;
+}
+
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<table width="90%" >
+<tr> <td>Product Id  </td> <td>Product Name  </td> <td>Product price </td> <td>Mfd  </td> <td>Colour  </td> <td>Exp Date  </td> </tr>
+
+<%
+
+ArrayList<Product> searchList=(ArrayList<Product>) session.getAttribute("searchList");
+
+for(Product product:searchList)
+{
+out.print("<tr>");
+
+out.print("<td>"+product.getProdId()+"</td>");
+out.print("<td>"+product.getProdName()+"</td>");
+out.print("<td>"+product.getProdPrice()+"</td>");
+out.print("<td>"+product.getMfd()+"</td>");
+out.print("<td>"+product.getColour()+"</td>");
+out.print("<td>"+product.getExpDate()+"</td>");
+
+out.print("</tr>");
+}
+
+
+%>
+
+</table>
+</body>
+</html>
+
+
+
+
+
+
+<form action="Search">
+Enter the Product Name to search<input type="text" name="search">
+<input type="submit" value="search"><br><br>
+</form>
