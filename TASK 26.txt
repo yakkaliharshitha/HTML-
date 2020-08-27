@@ -1,0 +1,478 @@
+package com.myserv.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+
+import com.myserv.dbutil.DBconnection;
+import com.myserv.model.Product;
+
+
+
+public class ProductDao {
+	
+	public String delete(int prod_id){
+		try
+		{
+		Connection connection=DBconnection.getConnect();
+
+		String sql="delete from products where prod_Id=?";
+		PreparedStatement stat=connection.prepareStatement(sql);
+
+
+		stat.setInt(1,prod_id);
+
+		int res= stat.executeUpdate();
+		if(res>0){
+		return "Product deleted";
+		}
+
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+
+		}
+
+		return "Product not deleted";
+		}
+
+	
+	public ArrayList<Product> getAllProducts()
+	{
+	try
+	{
+
+	Connection con=DBconnection.getConnect();
+	String sql="select * from products";
+
+	PreparedStatement stat=con.prepareStatement(sql);
+	ResultSet rs= stat.executeQuery();
+
+	ArrayList<Product> productList=new ArrayList<>();
+
+	while(rs.next())
+	{
+	int prodId= rs.getInt("prod_id");
+	String prodName= rs.getString("prod_name");
+	float prodPrice= rs.getFloat("prod_price");
+	Date mfd= rs.getDate("mfd");
+	String colour= rs.getString("colour");
+	Date expDate=rs.getDate("exp_date");
+
+	Product product=new Product(prodId, prodName, prodPrice, mfd, colour, expDate);
+
+	productList.add(product);
+
+	}
+
+	return productList;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+public String saveProduct(Product product)
+{
+
+try{
+Connection con= DBconnection.getConnect();
+String sql="insert into products values(?,?,?,?,?,?)";
+PreparedStatement stat=con.prepareStatement(sql);
+
+stat.setInt(1, product.getProdId());
+stat.setString(2, product.getProdName());
+stat.setFloat(3, product.getProdPrice());
+stat.setDate(4, new java.sql.Date(product.getMfd().getTime()));
+stat.setString(5, product.getColour());
+stat.setDate(6, new java.sql.Date(product.getExpDate().getTime()));
+
+
+int res= stat.executeUpdate();
+if(res>0)
+return "Product Created";
+
+
+}
+catch (Exception e) {
+// TODO: handle exception
+e.printStackTrace();
+}
+return "cannot create product";
+}
+
+
+}
+
+
+
+package com.myserv.dbutil;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBconnection {
+	public static Connection getConnect()
+	{
+	try
+	{
+
+	Class.forName("oracle.jdbc.OracleDriver");
+	Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "dxcfs", "pass");
+
+	return con;
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return null;
+	}
+
+	}
+
+
+
+
+
+
+
+package com.myserv.model;
+
+import java.util.Date;
+
+public class Product {
+	int prodId;
+	String prodName;
+	float prodPrice;
+	Date mfd;
+	String colour;
+	Date expDate;
+	public int getProdId() {
+	return prodId;
+	}
+	public void setProdId(int prodId) {
+	this.prodId = prodId;
+	}
+	public String getProdName() {
+	return prodName;
+	}
+	public void setProdName(String prodName) {
+	this.prodName = prodName;
+	}
+	public float getProdPrice() {
+	return prodPrice;
+	}
+	public void setProdPrice(float prodPrice) {
+	this.prodPrice = prodPrice;
+	}
+	public Date getMfd() {
+	return mfd;
+	}
+	public void setMfd(Date mfd) {
+	this.mfd = mfd;
+	}
+	public String getColour() {
+	return colour;
+	}
+	public void setColour(String colour) {
+	this.colour = colour;
+	}
+	public Date getExpDate() {
+	return expDate;
+	}
+	public void setExpDate(Date expDate) {
+	this.expDate = expDate;
+	}
+	public Product(int prodId, String prodName, float prodPrice, Date mfd, String colour, Date expDate) {
+	super();
+	this.prodId = prodId;
+	this.prodName = prodName;
+	this.prodPrice = prodPrice;
+	this.mfd = mfd;
+	this.colour = colour;
+	this.expDate = expDate;
+	}
+
+
+	public Product() {
+	// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+	return "Product [prodId=" + prodId + ", prodName=" + prodName + ", prodPrice=" + prodPrice + ", mfd=" + mfd
+	+ ", colour=" + colour + ", expDate=" + expDate + "]";
+	}
+
+
+
+	}
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="SaveServlet">
+Product Id :<input type="text" name="prodId">
+<br>
+<br>
+Product Name :<input type="text" name="prodName">
+<br>
+<br>
+Product Price :<input type="text" name="prodPrice">
+<br>
+<br>
+Mfd :<input type="date" name="mfd">
+<br>
+<br>
+
+Product Colour :<input type="text" name="prodColour">
+<br>
+<br>
+Exp Date :<input type="date" name="expDate">
+<br>
+<br>
+<input type="submit">
+</form>
+
+
+<form action="GetProducts">
+<input type="submit" value="display all products"><br><br>
+</form>
+
+
+<form action="Delete">
+Enter the ProductId to delete<input type="text" name="delete">
+<input type="submit" value="delete"><br><br>
+</form>
+
+
+</body>
+</html>
+
+
+
+package com.myserv.demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.myserv.dao.ProductDao;
+import com.myserv.model.Product;
+
+
+@WebServlet("/SaveServlet")
+public class SaveServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+  
+    public SaveServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	
+		int prodId=Integer.parseInt(request.getParameter("prodId"));
+		String prodName=request.getParameter("prodName");
+		float prodPrice=Float.parseFloat(request.getParameter("prodPrice"));
+		String mfdStr= request.getParameter("mfd");
+		String prodColour=request.getParameter("prodColour");
+		String expDateStr=request.getParameter("expDate");
+
+		Date mfd=null;
+		Date expDate=null;
+
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		try
+		{
+		mfd=sdf.parse(mfdStr);
+		expDate=sdf.parse(expDateStr);
+		}
+		catch (Exception e) {
+		// TODO: handle exception
+		e.printStackTrace();
+		}
+
+		Product product=new Product(prodId, prodName, prodPrice, mfd, prodColour, expDate);
+
+		PrintWriter out= response.getWriter();
+		response.setContentType("text/html");
+		ProductDao dao=new ProductDao();
+		out.print(dao.saveProduct(product));
+
+		
+		
+	}
+
+	
+	
+
+}
+
+
+
+
+
+
+package com.mysrv.demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import com.myserv.dao.ProductDao;
+import com.myserv.model.Product;
+
+/**
+ * Servlet implementation class GetProducts
+ */
+@WebServlet("/GetProducts")
+public class GetProducts extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+   
+    public GetProducts() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ProductDao dao=new ProductDao();
+		ArrayList<Product> productList= dao.getAllProducts();
+	    //System.out.println(productList.size());
+	    
+		
+
+		HttpSession session= request.getSession();
+		session.setAttribute("productList", productList);
+        RequestDispatcher rd=  request.getRequestDispatcher("displayProduct.jsp");
+		rd.forward(request, response);
+
+	}
+
+	
+	
+}
+
+
+
+
+<%@page import="com.myserv.model.Product"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+
+td
+{
+background-color: pink;
+font-family:comic sans ms;
+font-size: 15px;
+}
+
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<table width="90%" >
+<tr> <td>Product Id  </td> <td>Product Name  </td> <td>Product price </td> <td>Mfd  </td> <td>Colour  </td> <td>Exp Date  </td> </tr>
+
+<%
+
+ArrayList<Product> productList=(ArrayList<Product>) session.getAttribute("productList");
+
+for(Product product:productList)
+{
+out.print("<tr>");
+
+out.print("<td>"+product.getProdId()+"</td>");
+out.print("<td>"+product.getProdName()+"</td>");
+out.print("<td>"+product.getProdPrice()+"</td>");
+out.print("<td>"+product.getMfd()+"</td>");
+out.print("<td>"+product.getColour()+"</td>");
+out.print("<td>"+product.getExpDate()+"</td>");
+
+out.print("</tr>");
+}
+
+
+%>
+
+</table>
+</body>
+</html>
+
+
+
+
+
+package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.myserv.dao.ProductDao;
+
+
+@WebServlet("/Delete")
+public class Delete extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+  
+    public Delete() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ProductDao dao=new ProductDao();
+		int prodid=Integer.parseInt(request.getParameter("delete"));
+		PrintWriter out=response.getWriter();
+		response.setContentType("text/html");
+		out.print(dao.delete(prodid));
+	}
+
+	
+}
