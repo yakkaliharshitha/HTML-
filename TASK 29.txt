@@ -561,7 +561,7 @@ public class EmpDao {
 			  Criteria ct=session.createCriteria(Emp.class);
 			 
 			  ct.addOrder( Order.desc("age"));
-			  List<Emp> Age=(List<Emp>)ct.add(Restrictions.gt("age",49)).list();
+			  List<Emp> Age=(List<Emp>)ct.add(Restrictions.gt("age",33)).list();
 			
 			 counter++;
 			       List<Emp> Des = ct.list();
