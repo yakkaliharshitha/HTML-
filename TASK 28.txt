@@ -1,0 +1,510 @@
+package com.myapp.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
+@Entity
+@Table(name="user_demo")
+
+public class User {
+	@Id
+	@Column(name="uid_demo")
+	private int uid ;
+	private String uname ;
+	private Date dob ;
+	@Type(type = "yes_no")
+	private boolean isActive ;
+	public int getUid() {
+		return uid;
+	}
+	public void setUid(int uid) {
+		this.uid = uid;
+	}
+	public String getUname() {
+		return uname;
+	}
+	public void setUname(String uname) {
+		this.uname = uname;
+	}
+	public Date getDob() {
+		return dob;
+	}
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	public boolean isActive() {
+		return isActive;
+	}
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	@Override
+	public String toString() {
+		return "user [uid=" + uid + ", uname=" + uname + ", dob=" + dob + ", isActive=" + isActive + "]";
+	}
+	public User(int uid, String uname, Date dob, boolean isActive) {
+		super();
+		this.uid = uid;
+		this.uname = uname;
+		this.dob = dob;
+		this.isActive = isActive;
+	}
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+}
+
+
+
+
+
+package com.myapp.dao;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+
+import com.myapp.model.User;
+
+public class userdao {
+	public String Saveuser(User user)
+	{
+		SessionFactory factory=null;
+	try
+	{
+	 factory=new Configuration().configure().buildSessionFactory();
+	Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+	session.save(user);
+	tx.commit();
+	return "user saved";
+	}
+	catch (Exception e) {
+	
+	e.printStackTrace();
+	}
+
+	return "cannot save user";
+	}
+
+}
+
+
+
+package com.myapp.service;
+
+import java.util.Date;
+
+import com.myapp.dao.userdao;
+import com.myapp.model.User;
+
+public class userservice {
+	
+	public static void main(String args[]) {
+		
+	User user=new User(100,"Ashok",new Date(),true);
+	userdao d=new userdao();
+	System.out.println(d.Saveuser(user));
+	
+	}
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+package com.myapp.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
+
+import com.myapp.model.Book;
+
+@SuppressWarnings("deprecation")
+public class BookDao {
+SessionFactory factory=new Configuration().configure().buildSessionFactory();
+public String saveBook(Book book)
+{
+try
+{
+Session session= factory.openSession();
+Transaction tx=session.beginTransaction();
+session.save(book);
+tx.commit();
+return "book saved";
+}
+catch (Exception e) {
+// TODO: handle exception
+e.printStackTrace();
+}
+
+return "cannot save book";
+}
+
+public Book getBook(int isbn)
+{
+try
+{
+
+Session session= factory.openSession();
+Transaction tx=session.beginTransaction();
+Book book=session.get(Book.class, isbn);
+tx.commit();
+return book;
+}
+catch (Exception e) {
+e.printStackTrace();
+}
+finally {
+factory.close();
+}
+
+return null;
+
+}
+
+public List<Book> getBooks()
+{
+try
+{
+Session session= factory.openSession();
+Transaction tx=session.beginTransaction();
+@SuppressWarnings("unchecked")
+ArrayList<Book> books=(ArrayList<Book>)session.createQuery("from Book").list();
+tx.commit();
+return books;
+}
+catch (Exception e) {
+e.printStackTrace();
+}
+finally {
+factory.close();
+}
+
+return null;
+
+}
+@SuppressWarnings({ "rawtypes" })
+public Book getBook(String title)
+{
+try
+{
+Session session= factory.openSession();
+Transaction tx=session.beginTransaction();
+Query query=session.createQuery("from Book b where b.title=:titlePram");
+query.setParameter("titlePram", title);
+Book book=(Book)query.getSingleResult();
+tx.commit();
+return book;
+}
+catch (Exception e) {
+e.printStackTrace();
+}
+finally {
+factory.close();
+}
+
+return null;
+
+}
+
+public ArrayList<Book> filterBooks()
+{
+try
+{
+Session session= factory.openSession();
+Transaction tx=session.beginTransaction();
+
+Criteria ct=session.createCriteria(Book.class);
+// ct.add(Restrictions.gt("isbn", 101));
+// ArrayList<Book> books=(ArrayList<Book>)ct.list();
+
+@SuppressWarnings("unchecked")
+ArrayList<Book> books=(ArrayList<Book>)ct.add(Restrictions.gt("isbn", 101)).list();
+tx.commit();
+return books;
+}
+catch (Exception e) {
+e.printStackTrace();
+}
+finally {
+factory.close();
+}
+return null;
+}
+
+}
+
+
+package com.myapp.model;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
+@Entity
+public class Book {
+
+@Id
+private int isbn;
+private String title;
+private String author;
+
+@Column(name="book_date")
+private Date date;
+
+@Transient
+int copiesOfBook;
+
+@AttributeOverrides({
+    @AttributeOverride(name="pubId",column=@Column(name="pubId1")),
+    @AttributeOverride(name="pubName",column=@Column(name="pubName1"))})
+@Embedded
+Publisher publisher1;
+
+@Embedded
+Publisher2 publisher2;
+
+public Publisher getPublisher1() {
+return publisher1;
+}
+public void setPublisher1(Publisher publisher1) {
+this.publisher1 = publisher1;
+}
+public Publisher2 getPublisher2() {
+return publisher2;
+}
+public void setPublisher2(Publisher2 publisher2) {
+this.publisher2 = publisher2;
+}
+
+@ElementCollection
+List<Distributor> distList;
+
+public List<Distributor> getDistList() {
+return distList;
+}
+public void setDistList(List<Distributor> distList) {
+this.distList = distList;
+}
+public int getCopiesOfBook() {
+return copiesOfBook;
+}
+public void setCopiesOfBook(int copiesOfBook) {
+this.copiesOfBook = copiesOfBook;
+}
+public Date getDate() {
+return date;
+}
+public void setDate(Date date) {
+this.date = date;
+}
+
+public int getIsbn() {
+return isbn;
+}
+public void setIsbn(int isbn) {
+this.isbn = isbn;
+}
+public String getTitle() {
+return title;
+}
+public void setTitle(String title) {
+this.title = title;
+}
+public String getAuthor() {
+return author;
+}
+public void setAuthor(String author) {
+this.author = author;
+}
+public Book(int isbn, String title, String author) {
+super();
+this.isbn = isbn;
+this.title = title;
+this.author = author;
+}
+
+public Book(int isbn, String title, String author, Date date) {
+super();
+this.isbn = isbn;
+this.title = title;
+this.author = author;
+this.date = date;
+}
+
+public Book() {
+// TODO Auto-generated constructor stub
+}
+@Override
+public String toString() {
+return "Book [isbn=" + isbn + ", title=" + title + ", author=" + author + "]";
+}
+}
+package com.myapp.model;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class Distributor {
+
+int distId;
+String distName;
+String address;
+public int getDistId() {
+return distId;
+}
+public void setDistId(int distId) {
+this.distId = distId;
+}
+public String getDistName() {
+return distName;
+}
+public void setDistName(String distName) {
+this.distName = distName;
+}
+public String getAddress() {
+return address;
+}
+public void setAddress(String address) {
+this.address = address;
+}
+public Distributor(int distId, String distName, String address) {
+super();
+this.distId = distId;
+this.distName = distName;
+this.address = address;
+}
+
+public Distributor() {
+// TODO Auto-generated constructor stub
+}
+@Override
+public String toString() {
+return "Distributor [distId=" + distId + ", distName=" + distName + ", address=" + address + "]";
+}
+
+}
+package com.myapp.model;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class Publisher {
+
+private String publisherId;
+
+private String publisherName;
+
+public String getPublisherId() {
+return publisherId;
+}
+
+public void setPublisherId(String publisherId) {
+this.publisherId = publisherId;
+}
+
+public String getPublisherName() {
+return publisherName;
+}
+
+public void setPublisherName(String publisherName) {
+this.publisherName = publisherName;
+}
+
+public Publisher(String publisherId, String publisherName) {
+super();
+this.publisherId = publisherId;
+this.publisherName = publisherName;
+}
+public Publisher() {
+// TODO Auto-generated constructor stub
+}
+}
+package com.myapp.model;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class Publisher2 {
+	private int pubId;
+	private String pubName;
+	public int getPubId() {
+		return pubId;
+	}
+	public void setPubId(int pubId) {
+		this.pubId = pubId;
+	}
+	public String getPubName() {
+		return pubName;
+	}
+	public void setPubName(String pubName) {
+		this.pubName = pubName;
+	}
+	public Publisher2(int pubId, String pubName) {
+		super();
+		this.pubId = pubId;
+		this.pubName = pubName;
+	}
+	public Publisher2() {
+		// TODO Auto-generated constructor stub
+	}
+	
+}
+package com.myapp.service;
+
+import java.util.Date;
+
+import com.myapp.dao.BookDao;
+import com.myapp.model.Book;
+import com.myapp.model.Publisher;
+import com.myapp.model.Publisher2;
+
+public class BookService {
+
+public static void main(String[] args) {
+	
+	Book book=new Book(101,"My Book","Raghu",new Date());
+	Book book1=new Book(102,"My Book1","Jyothi",new Date());
+	Book book2=new Book(103,"My Book2","Satya",new Date());
+
+	Publisher publisher=new Publisher("1", "ABC publications");
+	book.setPublisher1(publisher);
+
+	Publisher2 publisher2=new Publisher2(13,"DEF Publications");
+	book.setPublisher2(publisher2);
+
+	BookDao dao=new BookDao();
+	System.out.println(dao.saveBook(book));
+	System.out.println(dao.saveBook(book1));
+	System.out.println(dao.saveBook(book2));
+}
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
