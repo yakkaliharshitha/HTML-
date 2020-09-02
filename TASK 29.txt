@@ -1,0 +1,641 @@
+package com.myapp.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="employeee")
+public class Employee {
+	@Id
+	int empid ;
+	String empname;
+	String city;
+	int age;
+	String dept;
+	public int getEmpid() {
+		return empid;
+	}
+	public void setEmpid(int empid) {
+		this.empid = empid;
+	}
+	public String getEmpname() {
+		return empname;
+	}
+	public void setEmpname(String empname) {
+		this.empname = empname;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getDept() {
+		return dept;
+	}
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+	public Employee(int empid, String empname, String city, int age, String dept) {
+		super();
+		this.empid = empid;
+		this.empname = empname;
+		this.city = city;
+		this.age = age;
+		this.dept = dept;
+	}
+	@Override
+	public String toString() {
+		return "Employee [empid=" + empid + ", empname=" + empname + ", city=" + city + ", age=" + age + ", dept="
+				+ dept + "]";
+	}
+	public Employee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	
+}
+
+
+
+
+
+package com.myapp.dao;
+
+import java.awt.List;
+import java.util.ArrayList;
+
+import javax.persistence.Query;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Restrictions;
+
+import com.myapp.model.Book;
+import com.myapp.model.Employee;
+
+public class EmployeeDao {
+	
+	
+	
+	SessionFactory factory=new Configuration().configure().buildSessionFactory();
+	
+	
+	
+	
+	
+	
+	public String saveEmployee(Employee employee)
+	{
+		//SessionFactory factory=null;
+	try
+	{ 
+		Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+		Employee e= new Employee();
+	Criteria crit = session.createCriteria(Employee.class);
+	crit.add(Restrictions.or((Restrictions.eq(e.getDept(), "It")),Restrictions.eq(e.getDept(),"Hr")));   
+	crit.add(Restrictions.or((Restrictions.eq(e.getDept(), "sales")),Restrictions.eq(e.getDept(),"marketing")));   
+	session.save(employee);
+	tx.commit();
+	return "Employee Details Saved";
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return "cannot save Employee Details";
+	}
+
+	
+	public ArrayList<Employee> getAll()
+	{
+	//	SessionFactory factory=null;
+	try
+	{
+		
+	Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+
+	ArrayList<Employee> all=(ArrayList<Employee>)session.createQuery("from Employee").list();
+
+
+	tx.commit();
+	return all;
+	}
+	catch (Exception e) {
+	e.printStackTrace();
+	}
+	finally {
+	factory.close();
+	}
+
+	return null;
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public ArrayList<Employee> Age()
+	{
+		//SessionFactory factory=null;
+	try
+	{
+	Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+   Criteria ct=session.createCriteria(Employee.class);
+	ArrayList<Employee> Age=(ArrayList<Employee>)ct.add(Restrictions.gt("age",40)).list();
+     tx.commit();
+	return Age;
+	}
+	catch (Exception e) {
+	e.printStackTrace();
+	}
+	finally {
+	factory.close();
+	}
+
+	return null;
+
+	}
+	
+	
+	
+	
+	
+	public ArrayList<Employee> cityBang()
+	{
+	try
+	{
+		
+	Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+    Criteria ct=session.createCriteria(Employee.class);
+    ArrayList<Employee> city=(ArrayList<Employee>) ct.add(Restrictions.like("city", "b%")).list();
+     //ArrayList<Employee> city=(ArrayList<Employee>)ct.add(Restrictions.ilike("city", "bangalore")).list();
+    tx.commit();
+    return city;
+	}  
+	
+   
+	catch (Exception e) {
+	e.printStackTrace();
+	}
+	finally {
+	factory.close();
+	}
+
+	return null;
+
+	}
+	
+	
+	
+	
+	public ArrayList<Employee> SalesHr()
+	{
+		//SessionFactory factory=null;
+	try
+	{
+		Employee e=new Employee();
+	Session session= factory.openSession();
+	Transaction tx=session.beginTransaction();
+   Criteria ct=session.createCriteria(Employee.class);
+   Criterion edept1=Restrictions.ilike("dept","s%");
+   Criterion edept2= Restrictions.like("dept","H%");
+   LogicalExpression Exp = Restrictions.or(edept1,edept2);
+   ArrayList<Employee> Sh=(ArrayList<Employee>) ct.add(Exp).list();
+     tx.commit();
+	return Sh;
+	}
+	catch (Exception e) {
+	e.printStackTrace();
+	}
+	finally {
+	factory.close();
+	}
+
+	return null;
+
+	}
+	
+	
+	
+	public ArrayList<Employee> getbyageandcity(int age,String city){
+		try
+		{
+			Employee e=new Employee();
+		Session session= factory.openSession();
+		Transaction tx=session.beginTransaction();
+	   Criteria ct=session.createCriteria(Employee.class);
+	   Criterion eage=Restrictions.gt("age",40);
+	   Criterion ecity= Restrictions.like("city","b%");
+	   LogicalExpression Exp = Restrictions.and(eage,ecity);
+	   ArrayList<Employee> ac=(ArrayList<Employee>) ct.add(Exp).list();
+	  // ArrayList<Employee> ac=(ArrayList<Employee>) ct.add(Restrictions.and((Restrictions.gt("age", "40")),Restrictions.like("city", "b%"))).list();   
+		
+	     tx.commit();
+		return ac;
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		finally {
+		factory.close();
+		}
+
+		return null;
+		
+		
+		
+	}
+	
+	
+	
+	
+	public ArrayList<Employee> getbyageanddept(int age,String dept){
+		try
+		{
+			Employee e=new Employee();
+		Session session= factory.openSession();
+		Transaction tx=session.beginTransaction();
+	   Criteria ct=session.createCriteria(Employee.class);
+	   Criterion eage=Restrictions.gt("age",40);
+	   Criterion edept= Restrictions.like("dept","s%");
+	   LogicalExpression Exp = Restrictions.and(eage,edept);
+	   ArrayList<Employee> ad=(ArrayList<Employee>) ct.add(Exp).list();
+	  // ArrayList<Employee> ac=(ArrayList<Employee>) ct.add(Restrictions.and((Restrictions.gt("age", "40")),Restrictions.like("city", "b%"))).list();   
+		
+	     tx.commit();
+		return ad;
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		finally {
+		factory.close();
+		}
+
+		return null;
+		
+    	   
+    	   
+    	   
+    	   
+    	   
+	}}
+
+
+
+
+
+
+
+
+
+package com.myapp.service;
+
+import java.util.ArrayList;
+
+import com.myapp.dao.BookDao;
+import com.myapp.dao.EmployeeDao;
+import com.myapp.model.Employee;
+
+public class EmployeeService {
+	public static void main(String[]args) {
+		
+		
+		
+		
+		
+		
+	/*
+		Employee employee=new Employee();
+		EmployeeDao dao=new EmployeeDao();
+		System.out.println(dao.getAll());
+		*/
+		
+		/*
+		Employee employee=new Employee(10,"lavanya","Bangalore",47,"Hr");
+		EmployeeDao dao=new EmployeeDao();
+		System.out.println(dao.saveEmployee(employee));
+		
+		*/
+/*		
+	EmployeeDao dao=new EmployeeDao();
+	ArrayList<Employee> age=(ArrayList<Employee>)dao.Age();
+
+	for(Employee e:age){
+	System.out.println(e);
+	}
+	
+*/
+
+
+/*
+EmployeeDao dao=new EmployeeDao();
+	 ArrayList<Employee> city = dao.cityBang();
+System.out.println(city);
+*/
+	/*	
+		EmployeeDao dao=new EmployeeDao();
+		ArrayList<Employee> agecity=dao.getbyageandcity(40,"bangalore");
+	System.out.println(agecity);
+	
+	
+	*/
+	/*
+	EmployeeDao dao=new EmployeeDao();
+	ArrayList<Employee> agedept=dao.getbyageanddept(40,"sales");
+System.out.println(agedept);
+
+*/
+
+
+
+
+EmployeeDao dao=new EmployeeDao();
+ArrayList<Employee> agedept=dao.SalesHr();
+System.out.println(agedept);
+
+
+ 
+/*
+	EmployeeDao dao=new EmployeeDao();
+	ArrayList<Employee> hs=(ArrayList<Employee>)dao.SalesHr();
+
+	for(Employee e:hs){
+	System.out.println(e);
+	}
+	
+*/
+	
+		
+
+}
+}
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package com.myapp.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+@Entity
+public class Emp {
+	
+	@Id
+	String empid;
+	int age;
+	String fname;
+	String lname;
+	
+	
+	
+	public Emp(int age, String fname, String lname) {
+		super();
+		this.age = age;
+		this.fname = fname;
+		this.lname = lname;
+	}
+	public String getEmpid() {
+		return empid;
+	}
+	public void setEmpid(String empid) {
+		this.empid = empid;
+	}
+	
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public Emp(String empid, int age, String fname, String lname) {
+		super();
+		this.empid = empid;
+		this.age = age;
+		this.fname = fname;
+		this.lname = lname;
+	}
+	public Emp() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+		return "Emp [empid=" + empid + ", age=" + age + ", fname=" + fname + ", lname=" + lname + "]";
+	}
+	
+	
+	
+	
+	
+	
+
+}
+
+
+
+package com.myapp.dao;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.criterion.Order;
+import javax.management.Query;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.OrderedMapType;
+
+import com.myapp.model.Emp;
+import com.myapp.model.Employee;
+public class EmpDao {
+	
+	SessionFactory factory=new Configuration().configure().buildSessionFactory();
+
+	
+	public String generateEmpId(String fname,String lname){
+		String emplId="";
+		String seqNum="";
+		int seqNumber=0;
+		try{
+		String sql="select emp_seq.nextval from dual";
+		Session session= factory.openSession();
+		Query query=(Query) session.createSQLQuery(sql);
+
+		seqNumber=Integer.parseInt(((org.hibernate.query.Query) query).getSingleResult().toString());
+
+
+		if(seqNumber < 100 && seqNumber >=10)
+		seqNum="0"+seqNumber;
+		else if(seqNumber<10)
+		seqNum="00"+seqNumber;
+		else
+		seqNum=""+seqNumber;
+
+		emplId=fname.substring(0,2)+lname.substring(0,2)+seqNum;
+
+		return emplId;
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+
+		return "cannot generate";
+		}
+
+
+
+		public String saveEmployee(Emp emp)
+		{
+
+		try
+		{
+		Session session= factory.openSession();
+
+		Transaction tx= session.beginTransaction();
+		emp.setEmpid(generateEmpId(emp.getFname(),emp.getLname()));
+		System.out.println(emp);
+        session.save(emp);
+		tx.commit();
+		return "employee saved";
+		}
+		catch (Exception e) {
+		// TODO: handle exception
+		e.printStackTrace();
+		}
+
+		return "cannot create employee";
+		}
+
+	
+	
+	public List<Emp> DesAge(){
+		try
+		{
+			int counter=0;
+			
+			Session session= factory.openSession();
+			Transaction tx=session.beginTransaction();
+			  Criteria ct=session.createCriteria(Emp.class);
+			 
+			  ct.addOrder( Order.desc("age"));
+			  List<Emp> Age=(List<Emp>)ct.add(Restrictions.gt("age",49)).list();
+			
+			 counter++;
+			       List<Emp> Des = ct.list();
+			
+		    tx.commit();
+			
+
+			 return  Des;
+			
+		}
+			
+
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return null;
+	}
+		
+	
+		
+	
+	
+	
+	
+	public ArrayList<Emp> three(){
+		try {
+		Session session= factory.openSession();
+		Transaction tx=session.beginTransaction();
+		 Criteria ct=session.createCriteria(Emp.class);
+	ArrayList<Emp> three=(ArrayList<Emp>)ct.add(Restrictions.le("age",20)).list();
+		     tx.commit();
+			return three;
+			}
+			catch (Exception e) {
+			e.printStackTrace();
+			}
+			finally {
+			factory.close();
+			}
+
+		
+		
+		return null;
+		
+	}
+	
+	
+	
+	
+	
+
+}
+
+
+package com.myapp.service;
+
+import com.myapp.dao.EmpDao;
+import com.myapp.model.Emp;
+
+public class EmpService {
+	public static void main(String[]args) {
+	//Emp emp=new Emp();
+		//Emp emp=new Emp("",20,"Rohith","Sharma");
+	EmpDao d=new EmpDao();
+	//Emp emp=new Emp(20,"Swathi","Jannu");
+	//System.out.println(d.saveEmployee(emp));
+	//System.out.println(d.three());
+	System.out.println(d.DesAge());
+	
+}
+}
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
