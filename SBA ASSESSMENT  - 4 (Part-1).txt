@@ -1,0 +1,822 @@
+--------------------------------------------------------------------SBA Assessment - 4 (Part-1)----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------Creating Student Web Page Model Using Spring and Hibernate Integration----------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------Class School( To create the required properties) -----------------------------------------------------------------------------------------------------------------------------------------
+
+package com.demo.demo.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class School {
+String name;
+@Id
+int id;
+String  standard;
+int rollno;
+int age;
+
+
+public int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+
+public String getStandard() {
+return standard;
+}
+public void setStandard(String standard) {
+this.standard = standard;
+}
+public int getRollno() {
+return rollno;
+}
+public void setRollno(int rollno) {
+this.rollno = rollno;
+}
+
+
+public int getAge() {
+return age;
+}
+public void setAge(int age) {
+this.age = age;
+}
+public School() {
+super();
+// TODO Auto-generated constructor stub
+}
+@Override
+public String toString() {
+return " name=" + name + "     " + "id=" + id + "    "+ " standard=" + standard + "    "+ " rollno=" + rollno + "       "+ " age=" + age+ "  ";
+}
+public School(String name, int id, String standard, int rollno, int age) {
+super();
+this.name = name;
+this.id = id;
+this.standard = standard;
+this.rollno = rollno;
+this.age = age;
+}
+
+
+
+}
+
+
+
+
+
+
+------------------------------------------------------Class Student Dao( To perform the operations )---------------------------------------------------------------------------------------------------------------------
+
+
+package com.demo.demo.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.demo.demo.model.School;
+@Transactional
+
+public class Schooldd {
+	
+	@Autowired
+	SessionFactory factory;
+
+
+	public Schooldd() {
+	// TODO Auto-generated constructor stub
+	}
+
+
+	public Schooldd(SessionFactory factory) {
+	super();
+	this.factory = factory;
+	}
+
+
+	public String saveSchool(School school){
+	try{
+	Session session=factory.getCurrentSession();
+	session.save(school);
+	return "Successfully inserted details!!!!!!!!!";
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return "Sorry , cannot enter details!!!!";
+	}
+
+
+
+	public List<School> getbyId(int id) {
+
+	try{
+	Session session=factory.getCurrentSession();
+	Criteria crit = session.createCriteria(School.class);
+	Query query=session.createQuery("from School a where a.id=:id");
+	query.setParameter("id", id);
+	ArrayList<School> byid=(ArrayList<School>) query.list();
+	return byid;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+
+
+
+
+	public List<School> getbyname(String name) {
+
+	try{
+	Session session=factory.getCurrentSession();
+	Criteria crit = session.createCriteria(School.class);
+	Query query=session.createQuery("from School b where b.name=:name");
+	query.setParameter("name", name);
+	ArrayList<School> byname=(ArrayList<School>) query.list();
+	return byname;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+
+
+	public List<School> getbyrollno(int rollno) {
+
+	try{
+	Session session=factory.getCurrentSession();
+	Criteria crit = session.createCriteria(School.class);
+	Query query=session.createQuery("from School c where c.rollno=:rollno");
+	query.setParameter("rollno",rollno);
+	ArrayList<School> byrollno=(ArrayList<School>) query.list();
+	return byrollno;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+
+
+
+
+	public List<School> getbystandard(String standard) {
+
+	try{
+	Session session=factory.getCurrentSession();
+	Criteria crit = session.createCriteria(School.class);
+	Query query=session.createQuery("from School d where d.standard=:standard");
+	query.setParameter("standard",standard);
+	ArrayList<School> bystandard=(ArrayList<School>) query.list();
+	return bystandard;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+
+
+	public List<School> getbyage(int age) {
+
+	try{
+	Session session=factory.getCurrentSession();
+	Criteria crit = session.createCriteria(School.class);
+	Query query=session.createQuery("from School e where e.age=:age");
+	query.setParameter("age",age);
+	ArrayList<School> byage=(ArrayList<School>) query.list();
+	return byage;
+
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+	return null;
+	}
+
+	public School updatingbyId(int id){
+	try{
+	Session session=factory.getCurrentSession();
+	School school=(School)session.get(School.class,id);
+	return school;
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return null;
+	}
+
+
+
+	public String updateSchool(School school){
+	try{
+	Session session=factory.getCurrentSession();
+
+	System.out.println("school "+school);
+	session.update("school",school);
+	return "Successfully Student Details updated";
+	}
+	catch (Exception e) {
+	// TODO: handle exception
+	e.printStackTrace();
+	}
+
+	return "Sorry could not update Student Details";
+	}
+
+
+
+	public String deletebyname(String name){
+	try
+	{
+
+	String hql="delete from School f where f.name = :name";
+	Session session= factory.openSession();
+	Query query=(Query) session.createSQLQuery(hql);
+	query.setParameter("name",name);
+	    int res=query.executeUpdate();
+	if(res>0)
+	return "Record is Successfully deleted!!!!";
+	}
+
+
+	catch (Exception e) {
+	e.printStackTrace();
+
+	}
+
+	return "Sorry could not delete !!!!!!";
+	}
+
+
+
+
+	public String deletebyid(int id){
+	try
+	{
+
+	String hql="delete from School g where g.id = :id";
+	Session session= factory.openSession();
+	Query query=(Query) session.createSQLQuery(hql);
+	query.setParameter("id",id);
+	    int res=query.executeUpdate();
+	if(res>0)
+	return "Record is Successfully deleted!!!!";
+	}
+
+
+	catch (Exception e) {
+	e.printStackTrace();
+
+	}
+
+	return "Sorry could not delete !!!!!!";
+	}
+
+
+
+
+
+
+
+	
+}
+
+
+-----------------------------------Home Controller(To switch from one jsp to another jsp file to display webpage) -------------------------------------------------------------------------------------------
+
+
+package com.demo.demo;
+import com.demo.demo.dao.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+import com.demo.demo.model.School;
+@Controller
+public class HomeController {
+	
+	@Autowired
+	Schooldd dao;
+	private int id;
+
+
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home() {
+	return "home";
+	}
+
+	@RequestMapping(value="/savestud")
+	public String savestudent(Model model,@ModelAttribute School school)
+	{
+	String status=dao.saveSchool(school);
+	model.addAttribute("status",status);
+	return "displayall";
+	}
+
+
+
+	/*
+	* @RequestMapping(value="/display") public String display(Model
+	* model,@ModelAttribute School school) {
+	*
+	* return "display"; }
+	*/
+
+	@RequestMapping(value="/search")
+	public String search(Model model,@RequestParam int id)
+	{
+	List<School> status=dao.getbyId(id);
+	//System.out.println(status);
+	model.addAttribute("status",status);
+	return "displaysearch1";
+	}
+
+
+	@RequestMapping(value="/search1")
+	public String search1(Model model,@RequestParam String name)
+	{
+	List<School> status=dao.getbyname(name);
+	//System.out.println(status);
+	model.addAttribute("status",status);
+	return "displaysearch1";
+	}
+
+
+	@RequestMapping(value="/search2")
+	public String search2(Model model,@RequestParam int rollno)
+	{
+	List<School> status=dao.getbyrollno(rollno);
+	//System.out.println(status);
+	model.addAttribute("status",status);
+	return "displaysearch1";
+	}
+
+
+
+	@RequestMapping(value="/search3")
+	public String search3(Model model,@RequestParam String standard)
+	{
+	List<School> status=dao.getbystandard(standard);
+	//System.out.println(status);
+	model.addAttribute("status",status);
+	return "displaysearch1";
+	}
+
+
+
+	@RequestMapping(value="/search4")
+	public String search4(Model model,@RequestParam int age)
+	{
+	List<School> status=dao.getbyage(age);
+	//System.out.println(status);
+	model.addAttribute("status",status);
+	return "displaysearch1";
+	}
+
+	@RequestMapping(value="/updatepage")
+	public String update()
+	{
+	return "updatepage";
+	}
+
+
+	@RequestMapping(value="/searchForUpdate")
+	public String searchForUpdate(Model model,@RequestParam("id")int id)
+	{
+                    int studid=id;
+                     this.id=studid;
+	School school=dao.updatingbyId(studid);
+	model.addAttribute(school);
+	model.addAttribute("school",school);
+	return "updatepage";
+	}
+
+
+
+	@RequestMapping(value="/updateData")
+	public String updateData(Model model,@ModelAttribute School school)
+	{
+	
+	school.setId(id);
+	String update=dao.updateSchool(school);
+	System.out.println(school);
+	model.addAttribute("update",update);
+	return "updateFinal";
+	}
+
+
+
+	@RequestMapping(value="/delete")
+	public String delete(Model model,@RequestParam ("name") String name)
+	{
+	String status=dao.deletebyname(name);
+	model.addAttribute("status",status);
+
+	return "displaysearch1";
+	}
+
+
+	@RequestMapping(value="/delete1")
+	public String delete1(Model model,@RequestParam ("id") int id)
+	{
+	String status=dao.deletebyid(id);
+	model.addAttribute("status",status);
+
+	return "displaysearch1";
+	}
+
+
+
+
+
+
+	}
+
+
+-----------------------------------------------------home.jsp(To display all the functions of web page )-----------------------------------------------------------------------------------------
+
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+
+<title>Update</title>
+<style>
+input[type=submit] {
+font-family: Trebuchet MS;
+background-color: #b413bd;
+border-color: pink;
+border-width: 2px solid black;
+text-decoration: none;
+color: white;
+padding: 10px 60px;
+margin: 20px 20px;
+cursor: pointer;
+}
+input[type=submit]:hover {
+background-color: pink;
+color: white;
+}
+input[type=text], select {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+</style>
+</head>
+<body bgcolor="#eb6ff2">
+<br>
+<center>
+<div style="background-color:#fff;margin-bottom: 20px;">
+<font face="Trebuchet MS" size="6" color="black">Welcome  Students !!!!</font>
+</div>
+<div style="background-color: white;width: 550px;height: 2300px; padding-top: 20px;">
+<font face="Trebuchet MS" size="5"></font>Welcome  Student To Fill Details
+
+
+<center>
+<form action="savestud">
+<fieldset>
+Enter Student Name Here:<input type="text" name="name">
+<br>
+<br>
+Enter Student ID Here:<input type="text" name="id">
+<br>
+<br>
+Enter Student Standard Here:<input type="text" name="standard">
+<br>
+<br>
+Enter Student RollNo Here:<input type="text" name="rollno">
+<br>
+<br>
+Enter Student Age Here:<input type="text" name="age">
+<br>
+<br>
+<input type="submit">
+</fieldset>
+</form>
+</center>
+
+
+
+<br>
+<br>
+
+<center>
+<form action=search>
+<fieldset>
+<h3>Enter here to search the Student details by Student Id</h3>
+<input type="text"  name="id" >
+<input type="submit">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+
+<center>
+<form action=search1>
+<fieldset>
+<h3>Enter here to search the Student details by Student Name</h3>
+<input type="text"  name="name" >
+<input type="submit">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+
+
+<center>
+<form action=search2>
+<fieldset>
+<h3>Enter here to search the Student details by Student RollNo</h3>
+<input type="text"  name="rollno" >
+<input type="submit">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+
+<center>
+<form action=search3>
+<fieldset>
+<h3>Enter here to search the Student details by Student Standard</h3>
+<input type="text"  name="standard" >
+<input type="submit">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+
+
+
+
+
+<center>
+<form action=search4>
+<fieldset>
+<h3>Enter here to search the Student details by Student Age</h3>
+<input type="text"  name="age" >
+<input type="submit">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+<center>
+<h3>Click Here to update Student Details</h3>
+<form action="updatepage">
+<fieldset>
+<input type="submit" value="Update">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+<center>
+<form  action="delete">
+<fieldset>
+<h3>Enter here to Delete by Name</h3>
+<input type="text" name="name">
+<input type="submit" value="Delete by name">
+</fieldset>
+</form>
+</center>
+<br>
+<br>
+<center>
+
+<form  action="delete1">
+<fieldset>
+<h3>Enter here to Delete by Id</h3>
+<input type="text" name="id">
+<input type="submit" value="Delete by Id">
+</fieldset>
+</form>
+
+</center>
+
+</body>
+</html>
+
+
+
+
+
+------------------------------------------------displayall.jsp(To Display The Status Of Students Filled Details)--------------------------------------------------------------------
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+<title>Home</title>
+</head>
+<body bgcolor="#f27ea3">
+<center>
+<h2>
+
+View The Details Filled status
+</h2>
+</center>
+
+<center>
+<P> ${status} </P>
+<!-- <form action="display">
+Click Here To view The Details Entered
+<input type="submit" value="View Details">
+</form> -->
+</center>
+
+</body>
+</html>
+
+
+
+------------------------------------displaysearch1.jsp(To display all the search operation output and status of delete function)------------------------------------------------------------------------------------------------
+
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body bgcolor="#d37feb">
+ <table width="90%" border=20px >
+ <tr> <td>Student Id  </td> <td>Student Name  </td> <td>Student Standard </td> <td>Student RollNo  </td> <td>Student Age </td>  </tr> 
+<br>
+<br>
+
+
+<center>
+ <h3>${status}</h3> 
+ </center>
+ 
+ 
+ <%-- 
+
+ <tr> <td>${student.id}  </td> <td>${student.name} </td> <td>${school.standard}</td> <td>${school.rollno} </td> <td>${school.age} </td>  </tr> 
+
+ --%>
+
+</table>  
+</body>
+</html>
+
+
+
+
+-----------------------------------updatepage.jsp(Used to Show All Details Based on Id and update the other Details)-----------------------------------------------------------------------------------------------
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+<title></title>
+</head>
+<body background="#fc607a">
+<center>
+<h1>
+Hello Student you can update your details here!!  
+</h1>
+</center>
+<center>
+<form action="searchForUpdate">
+Student Id:<input type="text" name="id" value="${school.id}">
+<input type="submit" value="search">
+</form>
+</center>
+<center>
+<form action="updateData">
+Student Name:<input type="text" name="name" value="${school.name}">
+<br>
+<br>
+Student Standard:<input type="text" name="standard" value="${school.standard}">
+<br>
+<br>
+
+Student RollNo:<input type="text" name="rollno" value="${school.rollno}">
+<br>
+<br>
+
+
+Student Age:<input type="text" name="age" value="${school.age}">
+<br>
+<br>
+<input type="submit" value="update Student">
+</form>
+</center>
+</body>
+</html>
+
+
+
+---------------------------------------------updateFinal.jsp(To show the details of the updated one )---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+<title></title>
+</head>
+<body bgcolor="#f27ea3">
+<center>
+<h2>
+
+View The Status  of Details updated
+</h2>
+</center>
+
+<center>
+<P> ${update} </P>
+<!-- <form action="display">
+Click Here To view The Details Entered
+<input type="submit" value="View Details">
+</form> -->
+</center>
+
+</body>
+</html>
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-------------------------------------------------------------------Done With the Codes !!!!!!!------------------------------------------------------------------------------------------------------------------------------------------------------------
+
