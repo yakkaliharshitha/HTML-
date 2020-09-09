@@ -438,7 +438,7 @@ public class HomeController {
 	return "updatepage";
 	}
 
-
+                     int id=0;
 	@RequestMapping(value="/searchForUpdate")
 	public String searchForUpdate(Model model,@RequestParam("id")int id)
 	{
@@ -446,22 +446,23 @@ public class HomeController {
                      this.id=studid;
 	School school=dao.updatingbyId(studid);
 	model.addAttribute(school);
-	model.addAttribute("school",school);
+	//model.addAttribute("school",school);
 	return "updatepage";
 	}
 
 
 
-	@RequestMapping(value="/updateData")
-	public String updateData(Model model,@ModelAttribute School school)
-	{
+	 @RequestMapping(value="/updatedata") 
+	 public String updateData(Model model,@ModelAttribute School school) {
+	  school.setId(id);
+	 // System.out.println(id);
+	 String up=dao.updateSchool(school);
+	 model.addAttribute("up",up);
+	 //System.out.println(up);
 	
-	school.setId(id);
-	String update=dao.updateSchool(school);
-	System.out.println(school);
-	model.addAttribute("update",update);
-	return "updateFinal";
+	return "update";
 	}
+	 
 
 
 
@@ -713,24 +714,32 @@ Click Here To view The Details Entered
 <title>Insert title here</title>
 </head>
 <body bgcolor="#d37feb">
- <table width="90%" border=20px >
- <tr> <td>Student Id  </td> <td>Student Name  </td> <td>Student Standard </td> <td>Student RollNo  </td> <td>Student Age </td>  </tr> 
+ 
 <br>
 <br>
+<table width="90%" border=20px >
+ <tr><td>Student Id  </td><td>Student Name  </td><td>Student Standard </td><td>Student RollNo  </td><td>Student Age </td>  </tr> 
 
 
-<center>
- <h3>${status}</h3> 
- </center>
+<c:forEach items="${status}" var="status" >
+
+
+ <tr>
+ <td>${status.id}</td>
+  <td>${status.name}</td>
+   <td>${status.standard}</td>
+    <td>${status.rollno}</td>
+    <td>${status.age}</td>
+    
+
+ </tr>
+ </c:forEach>
+ </table>  
  
  
- <%-- 
 
- <tr> <td>${student.id}  </td> <td>${student.name} </td> <td>${school.standard}</td> <td>${school.rollno} </td> <td>${school.age} </td>  </tr> 
 
- --%>
 
-</table>  
 </body>
 </html>
 
@@ -783,35 +792,30 @@ Student Age:<input type="text" name="age" value="${school.age}">
 
 
 
----------------------------------------------updateFinal.jsp(To show the details of the updated one )---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------update.jsp(To show the details of the updated one )---------------------------------------------------------------------------------------------------------------------------------
 
 
 
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
-<html>
 <head>
-<title></title>
+<title>Home</title>
 </head>
 <body bgcolor="#f27ea3">
 <center>
 <h2>
 
-View The Status  of Details updated
+Successfully Details Updated
 </h2>
 </center>
 
-<center>
-<P> ${update} </P>
-<!-- <form action="display">
-Click Here To view The Details Entered
-<input type="submit" value="View Details">
-</form> -->
-</center>
+
 
 </body>
 </html>
+
+    
 
 
 
