@@ -371,7 +371,13 @@ public class HomeController {
 	model.addAttribute("status",status);
 	return "displayall";
 	}
+          
+	@RequestMapping(value = "/mainpage", method = RequestMethod.GET)
+	public String mainpage() {
+		return "home";
+	}
 
+	
 
 
 	/*
@@ -696,7 +702,13 @@ Click Here To view The Details Entered
 <input type="submit" value="View Details">
 </form> -->
 </center>
-
+<br>
+<br>
+<center>
+<form action="mainpage">
+<input type="button" value="main page">
+</form>
+</center>
 </body>
 </html>
 
@@ -736,7 +748,13 @@ Click Here To view The Details Entered
  </c:forEach>
  </table>  
  
- 
+ <br>
+<br>
+<center>
+<form action="mainpage">
+<input type="button" value="main page">
+</form>
+</center>
 
 
 
@@ -787,6 +805,14 @@ Student Age:<input type="text" name="age" value="${school.age}">
 <input type="submit" value="update Student">
 </form>
 </center>
+
+<br>
+<br>
+<center>
+<form action="mainpage">
+<input type="button" value="main page">
+</form>
+</center>
 </body>
 </html>
 
@@ -810,7 +836,13 @@ Successfully Details Updated
 </h2>
 </center>
 
-
+<br>
+<br>
+<center>
+<form action="mainpage">
+<input type="button" value="main page">
+</form>
+</center>
 
 </body>
 </html>
