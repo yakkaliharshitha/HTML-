@@ -1,0 +1,125 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-test',
+  templateUrl: './test.component.html',
+  styleUrls: ['./test.component.css']
+})
+export class TestComponent implements OnInit {
+
+  mydata;
+ad;
+t1;
+x1=1000;
+x2=9000;
+x3=60;
+i=0;
+j=5;
+rev;
+a=10;
+b=20;
+mytime;
+h='hello';
+  data1;
+  high;
+  disp;
+  timeLeft: number = 60;
+  interval;
+time;
+ti=6000;
+
+  constructor() { 
+    this.rev=this.rever('hii all');
+    this.high=this.highest();
+    this.ad=this.adding();
+    this.mydata= this.abc();
+
+    setInterval(function(){ alert("Time is up"); }, this.ti);
+   
+
+   
+let abc1=() => {return 'any thing of ur choice'}
+this.data1= abc1();
+
+let xyz=(x:string):string=> {return x}
+
+let converter= (dollar:number):number => {
+  return dollar*75;
+}
+
+console.log(converter(2));
+}
+
+ ngOnInit() {
+  }
+
+
+  
+ 
+  rever(str:string) {
+    return str.split('').reverse().join('');
+  }
+highest(){
+if((this.x1>this.x2)&&(this.x1>this.x3))
+{
+  return this.x1;
+
+}
+else if(this.x2>this.x3){
+  return this.x2;
+}
+else{
+  return this.x3;
+}
+
+}
+adding(){
+return  this.a+this.b;
+  }
+abc()
+{
+  return 'hello world';
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+<p>
+  test works!
+<br>
+<br>
+  {{mydata}}
+<br>
+<br>
+  {{data1}}
+<br>
+<br>
+{{ad}}
+<br>
+<br>
+{{high}}
+<br>
+<br>
+{{rev}}
+<br>
+<br>
+
+
+
+ 
+</p>
+
+
+
+
+
+
